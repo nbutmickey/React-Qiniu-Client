@@ -1,12 +1,16 @@
 /*global URL */
 
+
+import FileItem from "./FileItem"
+import "./upload.css"
 var React = require('react');
 var ReactDOM = require('react-dom')
 var request = require('superagent-bluebird-promise');
 
+
 var isFunction = function (fn) {
- var getType = {};
- return fn && getType.toString.call(fn) === '[object Function]';
+    var getType = {};
+    return fn && getType.toString.call(fn) === '[object Function]';
 };
 
 var ReactQiniu = React.createClass({
@@ -21,29 +25,32 @@ var ReactQiniu = React.createClass({
         accept: React.PropTypes.string,
         multiple: React.PropTypes.bool,
         // Qiniu
-        uploadUrl: React.PropTypes.string
+        uploadUrl: React.PropTypes.string,
+        uploadList: React.PropTypes.array
     },
 
-    getDefaultProps: function() {
+    getDefaultProps: function () {
         var uploadUrl = 'http://upload.qiniu.com'
         if (window.location.protocol === 'https:') {
-          uploadUrl = 'https://up.qbox.me/'
+            uploadUrl = 'https://up.qbox.me/'
         }
 
         return {
             supportClick: true,
             multiple: true,
-            uploadUrl: uploadUrl
+            uploadUrl: uploadUrl,
+            uploadList: []
+
         };
     },
 
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             isDragActive: false
         };
     },
 
-    onDragLeave: function(e) {
+    onDragLeave: function (e) {
         e.preventDefault()
 
         console.log("onDragLeave");
@@ -53,12 +60,12 @@ var ReactQiniu = React.createClass({
         });
     },
 
-    onDragEnter: function(e){
+    onDragEnter: function (e) {
         console.log("onDragEnter")
         e.preventDefault();
     },
 
-    onDragOver: function(e) {
+    onDragOver: function (e) {
 
         console.log("onDragOver");
         e.preventDefault();
@@ -69,7 +76,7 @@ var ReactQiniu = React.createClass({
         });
     },
 
-    onDrop: function(e) {
+    onDrop: function (e) {
         e.preventDefault();
 
         this.setState({
@@ -107,35 +114,33 @@ var ReactQiniu = React.createClass({
         }
     },
 
-    open: function() {
+    open: function () {
         var fileInput = ReactDOM.findDOMNode(this.refs.fileInput);
         fileInput.value = null;
         fileInput.click();
     },
 
-    getCookies:function(c_name){
-            if (document.cookie.length>0)
-            {
-            var c_start=document.cookie.indexOf(c_name + "=")
-            if (c_start!==-1)
-                { 
-                c_start=c_start + c_name.length+1 
-                var c_end=document.cookie.indexOf(";",c_start)
-                if (c_end===-1) c_end=document.cookie.length
-                return unescape(document.cookie.substring(c_start,c_end))
-                } 
+    getCookies: function (c_name) {
+        if (document.cookie.length > 0) {
+            var c_start = document.cookie.indexOf(c_name + "=")
+            if (c_start !== -1) {
+                c_start = c_start + c_name.length + 1
+                var c_end = document.cookie.indexOf(";", c_start)
+                if (c_end === -1) c_end = document.cookie.length
+                return unescape(document.cookie.substring(c_start, c_end))
             }
-            return ""
+        }
+        return ""
     },
 
-    upload: function(file) {
+    upload: function (file) {
         if (!file || file.size === 0) return null;
         var key = file.preview.split('/').pop() + '.' + file.name.split('.').pop();
         var date = new Date();
-        var pre = date.getFullYear()+"/"+(1+date.getMonth())+"/"+date.getDate()+"/";
+        var pre = date.getFullYear() + "/" + (1 + date.getMonth()) + "/" + date.getDate() + "/";
         key = pre + key;
         var header = {
-            "Content-Type":"application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded"
         }
 
         var AK = this.getCookies("ak");
@@ -143,44 +148,56 @@ var ReactQiniu = React.createClass({
         var BUCKET = this.getCookies("bucket");
         var KEY = key;
 
-        var body = "ak="+AK+"&&sk="+SK+"&&bucket="+BUCKET+"&&key="+KEY;
+        var body = "ak=" + AK + "&&sk=" + SK + "&&bucket=" + BUCKET + "&&key=" + KEY;
 
         //获取token
-        fetch(this.props.tokenHost,{
-            method:"POST",
-            headers:header,
-            body:body,
+        fetch(this.props.tokenHost, {
+            method: "POST",
+            headers: header,
+            body: body,
         })
-         .then((response)=>response.json())
-         .then((json)=>{
-            if(json["code"]!==200){
+            .then((response) => response.json())
+            .then((json) => {
+                if (json["code"] !== 200) {
                     console.log("Token 生成失败");
                     return;
-            }
+                }
 
-            var token = json["token"] 
-        
-            
-            var r = request
-                .post(this.props.uploadUrl)
-                .field('key', key)
-                .field('token', token)
-                .field('x:filename', file.name)
-                .field('x:size', file.size)
-                .attach('file', file, file.name)
-                .set('Accept', 'application/json');
+                var token = json["token"]
 
-            if (isFunction(file.onprogress)) { r.on('progress', file.onprogress); }
-            return r;
-         })
-         .catch((error)=>{
-             
-         })
 
-        
+                var r = request
+                    .post(this.props.uploadUrl)
+                    .field('key', key)
+                    .field('token', token)
+                    .field('x:filename', file.name)
+                    .field('x:size', file.size)
+                    .attach('file', file, file.name)
+                    .set('Accept', 'application/json')
+                    .then((res) => {
+                        console.log(res);
+                        this.dealResult(res.body);
+                    })
+
+                if (isFunction(file.onprogress)) { r.on('progress', file.onprogress); }
+                return r;
+            })
+            .catch((error) => {
+
+            })
     },
 
-    render: function() {
+
+    dealResult(json) {
+        var lists = this.props.uploadList
+        lists.push(json);
+        this.setState({
+            uploadList: lists
+        })
+    },
+
+    render: function () {
+        console.log("render");
         var className = this.props.className || 'dropzone';
         if (this.state.isDragActive) {
             className += ' active';
@@ -193,33 +210,49 @@ var ReactQiniu = React.createClass({
         };
 
         var inputStyle = {
-            display:'none'
+            display: 'none'
         }
 
-//   return (
-//             React.createElement('div', {className: className, style: style, onClick: this.onClick, onDragLeave: this.onDragLeave, onDragOver: this.onDragOver, onDrop: this.onDrop},
-//                                 React.createElement('input', {style: {display: 'none'}, type: 'file', multiple: this.props.multiple, ref: 'fileInput', onChange: this.onDrop, accept: this.props.accept}),
-//                                 this.props.children
-//                                )
-//         );
-        return(
+        var baseUrl = this.getCookies("host");
+        
+        var temp = this.props.uploadList.reverse();
+
+        var lists = temp.map(item => {
+            return (
+                <FileItem key={item.hash}
+                    imageUrl={baseUrl + item.key}
+                    fileName={item.filename}
+                    size={item.size}/>
+            )
+        })
+
+
+
+
+
+        return (
+            <div className="upload-container">
                 <div className={className}
-                     style={style}
-                     onDrop={this.onDrop}
-                     onDragOver={this.onDragOver}
-                     onDragLeave={this.onDragLeave}
-                     onChange={this.onDrag}
-                     onDragEnter={this.onDragEnter}
-                     onClick={this.onClick}>
-                    <input style={inputStyle} 
-                            type="file"
-                            ref="fileInput"
-                            multiple={this.props.multiple}
-                            onChange={this.onDrop}
-                            accept={this.props.accept}
-                    />
-                        {this.props.children}
+                    style={style}
+                    onDrop={this.onDrop}
+                    onDragOver={this.onDragOver}
+                    onDragLeave={this.onDragLeave}
+                    onChange={this.onDrag}
+                    onDragEnter={this.onDragEnter}
+                    onClick={this.onClick}>
+                    <input style={inputStyle}
+                        type="file"
+                        ref="fileInput"
+                        multiple={this.props.multiple}
+                        onChange={this.onDrop}
+                        accept={this.props.accept} />
+                    {this.props.children}
                 </div>
+
+                <div className="upload-list">
+                    {lists}
+                </div>
+            </div>
         );
     }
 
