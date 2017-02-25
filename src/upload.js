@@ -14,7 +14,6 @@ var ReactQiniu = React.createClass({
     propTypes: {
         onDrop: React.PropTypes.func.isRequired,
         tokenHost: React.PropTypes.string.isRequired,
-        // called before upload to set callback to files
         onUpload: React.PropTypes.func,
         size: React.PropTypes.number,
         style: React.PropTypes.object,
@@ -22,9 +21,7 @@ var ReactQiniu = React.createClass({
         accept: React.PropTypes.string,
         multiple: React.PropTypes.bool,
         // Qiniu
-        uploadUrl: React.PropTypes.string,
-        // uploadKey: React.PropTypes.string,
-        prefix: React.PropTypes.string
+        uploadUrl: React.PropTypes.string
     },
 
     getDefaultProps: function() {
@@ -47,12 +44,23 @@ var ReactQiniu = React.createClass({
     },
 
     onDragLeave: function(e) {
+        e.preventDefault()
+
+        console.log("onDragLeave");
+
         this.setState({
             isDragActive: false
         });
     },
 
+    onDragEnter: function(e){
+        console.log("onDragEnter")
+        e.preventDefault();
+    },
+
     onDragOver: function(e) {
+
+        console.log("onDragOver");
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
 
@@ -105,19 +113,53 @@ var ReactQiniu = React.createClass({
         fileInput.click();
     },
 
+    getCookies:function(c_name){
+            if (document.cookie.length>0)
+            {
+            var c_start=document.cookie.indexOf(c_name + "=")
+            if (c_start!==-1)
+                { 
+                c_start=c_start + c_name.length+1 
+                var c_end=document.cookie.indexOf(";",c_start)
+                if (c_end===-1) c_end=document.cookie.length
+                return unescape(document.cookie.substring(c_start,c_end))
+                } 
+            }
+            return ""
+    },
+
     upload: function(file) {
         if (!file || file.size === 0) return null;
         var key = file.preview.split('/').pop() + '.' + file.name.split('.').pop();
         var date = new Date();
-        var pre = date.getFullYear()+"/"+(1+date.getMonth())+"/"+date.getDay()+"/";
+        var pre = date.getFullYear()+"/"+(1+date.getMonth())+"/"+date.getDate()+"/";
         key = pre + key;
+        var header = {
+            "Content-Type":"application/x-www-form-urlencoded"
+        }
+
+        var AK = this.getCookies("ak");
+        var SK = this.getCookies("sk");
+        var BUCKET = this.getCookies("bucket");
+        var KEY = key;
+
+        var body = "ak="+AK+"&&sk="+SK+"&&bucket="+BUCKET+"&&key="+KEY;
+
         //获取token
-        fetch(this.props.tokenHost+"?key="+key)
+        fetch(this.props.tokenHost,{
+            method:"POST",
+            headers:header,
+            body:body,
+        })
          .then((response)=>response.json())
          .then((json)=>{
+            if(json["code"]!==200){
+                    console.log("Token 生成失败");
+                    return;
+            }
+
             var token = json["token"] 
-            
-            console.log(pre)
+        
             
             var r = request
                 .post(this.props.uploadUrl)
@@ -127,6 +169,7 @@ var ReactQiniu = React.createClass({
                 .field('x:size', file.size)
                 .attach('file', file, file.name)
                 .set('Accept', 'application/json');
+
             if (isFunction(file.onprogress)) { r.on('progress', file.onprogress); }
             return r;
          })
@@ -149,12 +192,34 @@ var ReactQiniu = React.createClass({
             borderStyle: this.state.isDragActive ? 'solid' : 'dashed'
         };
 
+        var inputStyle = {
+            display:'none'
+        }
 
-        return (
-            React.createElement('div', {className: className, style: style, onClick: this.onClick, onDragLeave: this.onDragLeave, onDragOver: this.onDragOver, onDrop: this.onDrop},
-                                React.createElement('input', {style: {display: 'none'}, type: 'file', multiple: this.props.multiple, ref: 'fileInput', onChange: this.onDrop, accept: this.props.accept}),
-                                this.props.children
-                               )
+//   return (
+//             React.createElement('div', {className: className, style: style, onClick: this.onClick, onDragLeave: this.onDragLeave, onDragOver: this.onDragOver, onDrop: this.onDrop},
+//                                 React.createElement('input', {style: {display: 'none'}, type: 'file', multiple: this.props.multiple, ref: 'fileInput', onChange: this.onDrop, accept: this.props.accept}),
+//                                 this.props.children
+//                                )
+//         );
+        return(
+                <div className={className}
+                     style={style}
+                     onDrop={this.onDrop}
+                     onDragOver={this.onDragOver}
+                     onDragLeave={this.onDragLeave}
+                     onChange={this.onDrag}
+                     onDragEnter={this.onDragEnter}
+                     onClick={this.onClick}>
+                    <input style={inputStyle} 
+                            type="file"
+                            ref="fileInput"
+                            multiple={this.props.multiple}
+                            onChange={this.onDrop}
+                            accept={this.props.accept}
+                    />
+                        {this.props.children}
+                </div>
         );
     }
 
