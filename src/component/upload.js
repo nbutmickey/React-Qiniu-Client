@@ -219,10 +219,10 @@ var ReactQiniu = React.createClass({
 
         var lists = temp.map(item => {
             return (
-                <FileItem key={item.hash}
+                <FileItem key={item.key}
                     imageUrl={baseUrl + item.key}
-                    fileName={item.filename}
-                    size={item.size}/>
+                    fileName={item["x:filename"]}
+                    size={item["x:size"]}/>
             )
         })
 
@@ -231,7 +231,7 @@ var ReactQiniu = React.createClass({
 
 
         return (
-            <div className="upload-container">
+            <div className="container">
                 <div className={className}
                     style={style}
                     onDrop={this.onDrop}
@@ -249,8 +249,10 @@ var ReactQiniu = React.createClass({
                     {this.props.children}
                 </div>
 
-                <div className="upload-list">
-                    {lists}
+                <div className="container">
+                    <div className="row">
+                        {lists}
+                    </div>
                 </div>
             </div>
         );

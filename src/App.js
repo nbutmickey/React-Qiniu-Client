@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Qi from './upload'
+import Qi from './component/upload'
 import './App.css';
 
 class App extends Component {
@@ -24,6 +24,7 @@ render() {
             height: '200px',
             color: '#aaa'
         }
+    var size = 200    
     return (
       <div className="App">
         <Qi onDrop={this.onDrop}
