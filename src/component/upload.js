@@ -3,10 +3,15 @@
 
 import FileItem from "./FileItem"
 import "./upload.css"
-var React = require('react');
-var ReactDOM = require('react-dom')
-var request = require('superagent-bluebird-promise');
+import {
+  ToastContainer,
+  ToastMessage,
+} from "react-toastr";
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import request from 'superagent-bluebird-promise';
 
+const ToastMessageFactory = React.createFactory(ToastMessage.animation);
 
 var isFunction = function (fn) {
     var getType = {};
@@ -160,6 +165,10 @@ var ReactQiniu = React.createClass({
             .then((json) => {
                 if (json["code"] !== 200) {
                     console.log("Token 生成失败");
+
+                    this.refs.container.error(`Token获取失败`, `Error`, {
+                        closeButton: true,
+                    });
                     return;
                 }
 
@@ -232,6 +241,11 @@ var ReactQiniu = React.createClass({
 
         return (
             <div className="container">
+                <ToastContainer
+                    toastMessageFactory={ToastMessageFactory}
+                    ref="container"
+                    className="toast-top-right"/>
+
                 <div className={className}
                     style={style}
                     onDrop={this.onDrop}
