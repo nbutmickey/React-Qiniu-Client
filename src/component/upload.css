@@ -1,13 +1,24 @@
-.upload-container{
-    width: 80%;
-    margin: 0px auto;
+.App {
+  text-align: center;
 }
 
-.upload-list{
-    margin-top: 5pc
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
 }
 
-.center{
-    width: 100%;
-    margin: 0 auto;
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
