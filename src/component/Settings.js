@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { setCookie, getCookies, AK, SK, BUCKET, HOST,qiniuSign } from './common'
+import { setCookie, getCookies, AK, SK, BUCKET, HOST,genToken } from './common'
 import { ToastContainer,ToastMessage} from "react-toastr";
 import "./Settings.css"
 
@@ -15,8 +15,6 @@ export default class Settings extends Component {
             bucket: getCookies(BUCKET),
             host: getCookies(HOST)
         }
-        var  body = "/list?bucket=kutear&marker=&limit=1000&delimiter=/&prefix=\n";
-        console.log(this.state.ak+":"+qiniuSign(this.state.sk,body))
     }
 
 

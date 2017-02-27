@@ -27,14 +27,42 @@ export function getCookies(c_name) {
     return ""
 }
 
-export function qiniuSign(key, data) {
+export function fetchUploadToken(body,host,callback){
+        var header = {
+            "Content-Type": "application/x-www-form-urlencoded"
+        }
+        fetch(host, {
+            method: "POST",
+            headers: header,
+            body: body,
+        })
+        .then((res)=>res.json())
+        .then((json)=>callback(json));
+
+}
+
+export function genToken(path,body,sk){
+    var data = path;
+    if (body == undefined){
+        data = data +"\n";
+    }else{
+         data = data+"\n"+body;
+    }
+    return qiniuSign(sk,data);
+}
+
+export function fetchFolder(bucket,delimiter,prefix,callback){
+
+}
+
+
+
+function qiniuSign(key, data) {
     var temp = hmacsha1(key, data);
-    console.log(temp)
-    return urlsafe_b64encode(temp)
+    return urlsafe_b64encode(temp);
 }
 
 function urlsafe_b64encode(data) {
-    var base64Data = btoa(data);
-    return base64Data.replace(/\//g, '_').replace(/\+/g, '-');
+    return data.replace(/\//g, '_').replace(/\+/g, '-');
 
 }
