@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "bluebird": "^3.0.0",
+    "hmacsha1": "^1.0.0",
     "react": "^15.4.2",
     "react-copy-to-clipboard": "^4.2.3",
     "react-dom": "^15.4.2",
+    "react-router": "^3.0.2",
     "react-toastr": "^2.8.2",
     "superagent": "^1.2.0",
     "superagent-bluebird-promise": "^3.0.2"
