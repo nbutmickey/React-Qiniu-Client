@@ -37,7 +37,14 @@ export function fetchUploadToken(body,host,callback){
             body: body,
         })
         .then((res)=>res.json())
-        .then((json)=>callback(json));
+        .then((json)=>{
+            if(json["code"] == 200){
+                callback.onSuccess(json)
+            }else{
+                callback.onError()
+            }
+        })
+        .catch(()=>callback.onError());
 
 }
 
@@ -51,7 +58,19 @@ export function genToken(path,body,sk){
     return qiniuSign(sk,data);
 }
 
-export function fetchFolder(bucket,delimiter,prefix,callback){
+export function fetchFolder(bucket,prefix,ak,sk,callback){
+    var host = "http://rsf.qbox.me";
+    var query = "/list?bucket="+bucket+"&marker=&limit=1000&delimiter=/&prefix="+prefix;
+    var header = {
+        "Content-Type":"application/x-www-form-urlencoded",
+        "Authorization":"QBox "+ak+":"+genToken(query,"",sk)
+    }
+    fetch(host+query,{
+        headers:header,
+        method:"POST"
+    })
+    .then((res)=>{res.json()})
+    .then((json)=>{console.log(json)})
 
 }
 

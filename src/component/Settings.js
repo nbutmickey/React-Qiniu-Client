@@ -1,20 +1,36 @@
 import React, { Component } from 'react'
-import { setCookie, getCookies, AK, SK, BUCKET, HOST,genToken } from './common'
-import { ToastContainer,ToastMessage} from "react-toastr";
-import "./Settings.css"
+import { setCookie, getCookies, AK, SK, BUCKET, HOST, genToken } from './Common'
+import { ToastContainer, ToastMessage } from "react-toastr";
+import "../res/css/Settings.css"
+import { connect } from "react-redux"
+import { modifyConfig } from "../redux/Actions"
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation);
 
-export default class Settings extends Component {
+
+function mapStateToProps(state) {
+    return {
+        ak: state.config.ak,
+        sk: state.config.sk,
+        host: state.config.host,
+        bucket: state.config.bucket
+
+    }
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+    return {
+        saveToStore: (state) => {
+            dispatch(modifyConfig(state.ak, state.sk, state.bucket, state.host));
+        }
+    };
+}
+
+class Settings extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            ak: getCookies(AK),
-            sk: getCookies(SK),
-            bucket: getCookies(BUCKET),
-            host: getCookies(HOST)
-        }
+        this.state = props;
     }
 
 
@@ -54,11 +70,8 @@ export default class Settings extends Component {
             return;
         }
 
-
-        setCookie(SK, this.state.sk, 100)
-        setCookie(BUCKET, this.state.bucket, 100)
-        setCookie(HOST, this.state.host, 100)
-        setCookie(AK, this.state.ak, 100)
+        //todo 
+        this.props.saveToStore(this.state);
 
         this.refs.container.success(`Save Sucess`, `Settings`, {
             closeButton: true,
@@ -108,3 +121,5 @@ export default class Settings extends Component {
         )
     }
 }
+
+export default connect(mapStateToProps,mapDispatchToProps)(Settings)

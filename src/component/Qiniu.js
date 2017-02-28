@@ -1,9 +1,9 @@
 import FileItem from "./FileItem"
-import "./Qiniu.css"
+import "../res/css/Qiniu.css"
 import React,{Component} from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
-import {getCookies,fetchUploadToken} from "./common"
+import {getCookies,fetchUploadToken} from "./Common"
 
 export default class ReactQiniu extends Component{
     static propTypes = {
@@ -104,8 +104,16 @@ export default class ReactQiniu extends Component{
         var BUCKET = getCookies("bucket");
         var KEY = key;
         var body = "ak=" + AK + "&&sk=" + SK + "&&bucket=" + BUCKET + "&&key=" + KEY;
-        fetchUploadToken(body,this.props.tokenHost,(json)=>{
-                this.dealToken(json,key,file)
+        var that = this
+        fetchUploadToken(body,this.props.tokenHost,{
+                onError(){
+
+                },
+
+                onSuccess(json){
+                    that.dealToken(json,key,file)
+                }
+                
         })
     }
 

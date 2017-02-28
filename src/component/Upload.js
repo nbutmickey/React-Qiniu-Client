@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Qi from './Qiniu'
-import './Upload.css';
+import '../res/css/Upload.css';
 
 class App extends Component {
 

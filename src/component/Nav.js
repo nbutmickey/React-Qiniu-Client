@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from "react-router";
+import { connect } from 'react-redux'
 
 class Nav extends Component {
     render() {
@@ -9,7 +10,7 @@ class Nav extends Component {
                 {/* 导航条部分 */}
                 <div>
                     <ul>
-                        <li><Link to="/">Home</Link></li>
+                        <li><Link to="/" onClick={this.props.onClick}>Home</Link></li>
                         <li><Link to="/upload">Upload</Link></li>
                         <li><Link to="/settings">Settings</Link></li>
                     </ul>
@@ -23,4 +24,4 @@ class Nav extends Component {
     }
 }
 
-export default Nav;
+export default connect()(Nav);

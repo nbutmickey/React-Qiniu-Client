@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import "./FileItem.css"
+import "../res/css/FileItem.css"
 
 import CopyToClipboard from 'react-copy-to-clipboard';
 import {
