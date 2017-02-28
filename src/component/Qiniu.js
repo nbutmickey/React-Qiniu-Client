@@ -3,9 +3,19 @@ import "../res/css/Qiniu.css"
 import React,{Component} from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
+import {connect} from "react-redux"
 import {getCookies,fetchUploadToken} from "./Common"
 
-export default class ReactQiniu extends Component{
+function mapStateToProps(state) {
+    return {
+        ak: state.config.ak,
+        sk: state.config.sk,
+        host: state.config.host,
+        bucket: state.config.bucket
+    }
+}
+
+class ReactQiniu extends Component{
     static propTypes = {
         onDrop: React.PropTypes.func.isRequired,
         tokenHost: React.PropTypes.string.isRequired,
@@ -15,9 +25,9 @@ export default class ReactQiniu extends Component{
         supportClick: React.PropTypes.bool,
         accept: React.PropTypes.string,
         multiple: React.PropTypes.bool,
-        // Qiniu
+        // QiniutokenHost
         uploadUrl: React.PropTypes.string,
-        uploadList: React.PropTypes.array
+        uploadList: React.PropTypes.array,
     }
 
     static defaultProps = {
@@ -99,9 +109,9 @@ export default class ReactQiniu extends Component{
         var date = new Date();
         var pre = date.getFullYear() + "/" + (1 + date.getMonth()) + "/" + date.getDate() + "/";
         key = pre + key;
-        var AK = getCookies("ak");
-        var SK = getCookies("sk");
-        var BUCKET = getCookies("bucket");
+        var AK = this.props.ak;
+        var SK = this.props.sk;
+        var BUCKET = this.props.bucket;
         var KEY = key;
         var body = "ak=" + AK + "&&sk=" + SK + "&&bucket=" + BUCKET + "&&key=" + KEY;
         var that = this
@@ -137,7 +147,6 @@ export default class ReactQiniu extends Component{
                .attach('file', file, file.name)
                .set('Accept', 'application/json')
                .then((res) => {
-                   console.log(res);
                    this.dealResult(res.body);
                })
 
@@ -204,3 +213,5 @@ export default class ReactQiniu extends Component{
         );
     }
 }
+
+export default connect(mapStateToProps)(ReactQiniu)

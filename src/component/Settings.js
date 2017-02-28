@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { setCookie, getCookies, AK, SK, BUCKET, HOST, genToken } from './Common'
 import { ToastContainer, ToastMessage } from "react-toastr";
 import "../res/css/Settings.css"
 import { connect } from "react-redux"
@@ -13,15 +12,15 @@ function mapStateToProps(state) {
         ak: state.config.ak,
         sk: state.config.sk,
         host: state.config.host,
-        bucket: state.config.bucket
-
+        bucket: state.config.bucket,
+        tokenHost:state.config.tokenHost
     }
 }
 
 function mapDispatchToProps(dispatch, ownProps) {
     return {
         saveToStore: (state) => {
-            dispatch(modifyConfig(state.ak, state.sk, state.bucket, state.host));
+            dispatch(modifyConfig(state.ak, state.sk, state.bucket, state.host,state.tokenHost));
         }
     };
 }
@@ -62,6 +61,12 @@ class Settings extends Component {
 
     }
 
+    onTokenHost(e){
+        this.setState({
+            tokenHost:e.target.value
+        })
+    }
+
     onSave() {
         if (this.state.ak == "" || this.state.sk == "" || this.state.host == "" || this.state.bucket == "") {
             this.refs.container.error(`Some Filed is Empty`, `Error`, {
@@ -70,7 +75,6 @@ class Settings extends Component {
             return;
         }
 
-        //todo 
         this.props.saveToStore(this.state);
 
         this.refs.container.success(`Save Sucess`, `Settings`, {
@@ -106,6 +110,12 @@ class Settings extends Component {
                         <div className="form-group">
                             <div>
                                 <input type="text" value={this.state.host} className="form-control" placeholder="Host(http(s)://xx.xx.xx/)" onChange={this.onHost.bind(this)} />
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div>
+                                <input type="text" value={this.state.tokenHost} className="form-control" placeholder="Token服务器" onChange={this.onTokenHost.bind(this)} />
                             </div>
                         </div>
 

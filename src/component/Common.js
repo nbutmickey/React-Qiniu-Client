@@ -5,6 +5,7 @@ export const AK = "ak";
 export const SK = "sk";
 export const BUCKET = "bucket";
 export const HOST = "host";
+export const TOKEN_HOST = "token_host";
 
 
 export function setCookie(c_name, value, expiredays) {

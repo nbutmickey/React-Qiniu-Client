@@ -3,10 +3,7 @@ import React, { Component } from 'react';
 import "../res/css/FileItem.css"
 
 import CopyToClipboard from 'react-copy-to-clipboard';
-import {
-  ToastContainer,
-  ToastMessage,
-} from "react-toastr";
+import {ToastContainer,ToastMessage} from "react-toastr";
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation);
 
@@ -30,7 +27,7 @@ class FileItem extends Component {
                     className="toast-top-right"/>
                 <div className="center-block card card-1" >
                     <a href={this.props.imageUrl} target="_blank">
-                        <img src={this.props.imageUrl} className="image-item" />
+                        <img src={this.props.imageUrl} className="image-item" alt={this.props.imageUrl}/>
                     </a>
                 </div>
 

@@ -1,8 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import Qi from './Qiniu'
-import '../res/css/Upload.css';
+import '../res/css/Upload.css'
+import {connect} from "react-redux"
 
-class App extends Component {
+function mapToProps(state){
+  return {
+      tokenHost:state.config.tokenHost
+  }
+}
+
+
+class Upload extends Component {
 
 onDrop (files) {
 }
@@ -24,7 +32,7 @@ render() {
     return (
       <div className="App">
         <Qi onDrop={this.onDrop}
-            tokenHost={"http://host.kutear.com:8080/"}
+            tokenHost={this.props.tokenHost}
             style={dropZoneStyles}
             onUpload={this.onUpload}>
           <div style={styles}> 拖动文件或点击上传 </div>
@@ -34,4 +42,4 @@ render() {
   }
 }
 
-export default App;
+export default connect(mapToProps)(Upload);

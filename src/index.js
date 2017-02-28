@@ -12,7 +12,7 @@ import createLogger from 'redux-logger';
 import { Provider } from 'react-redux'
 import './res/css/index.css';
 import AppAction from "./redux/Reducers"
-import {AK,SK,HOST,BUCKET,getCookies} from "./component/Common"
+import {AK,SK,HOST,BUCKET,getCookies,TOKEN_HOST} from "./component/Common"
 
 
 
@@ -20,22 +20,36 @@ var ak = getCookies(AK)
 var sk = getCookies(SK)
 var bucket = getCookies(BUCKET)
 var host = getCookies(HOST)
+var tokenHost = getCookies(TOKEN_HOST)
 var defaultState={
   config:{
         ak:ak,
         sk:sk,
         host:host,
-        bucket:bucket
+        bucket:bucket,
+        tokenHost:tokenHost
   }
 }
 const logger = createLogger();
 let store = createStore(AppAction,defaultState,applyMiddleware(thunk, promise, logger))
+
+//主页和上传页面要求设置
+function auth(nextState, replace, callback){
+  var config = store.getState().config;
+  if(config.ak===""||config.sk===""||config.host===""||
+     config.bucket===""||config.tokenHost===""){
+    replace("/settings")
+  }
+  callback();
+}
+
+
 ReactDOM.render(
   <Provider store={store}>
     <Router history={hashHistory} >
       <Route path="/" component={Nav}>
-        <IndexRoute component={Home} />
-        <Route path="/upload" component={Upload} />
+        <IndexRoute component={Home} onEnter={auth} />
+        <Route path="/upload" component={Upload} onEnter={auth}/>
         <Route path="/settings" component={Settings} />
       </Route>
     </Router>

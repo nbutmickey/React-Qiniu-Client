@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import {fetchFolder} from "./Common"
  
 //文件操作
 export default class Home extends Component {
