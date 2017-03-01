@@ -3,6 +3,8 @@ import { ToastContainer, ToastMessage } from 'react-toastr'
 import '../res/css/Settings.css'
 import { connect } from 'react-redux'
 import { modifyConfig } from '../redux/Actions'
+import { DEFAULT_TOKEN_HOST } from './Common'
+import FlatButton from 'material-ui/FlatButton'
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation)
 
@@ -76,6 +78,20 @@ class Settings extends Component {
     })
   }
 
+  onReset () {
+    this.setState({
+      ak: '',
+      sk: '',
+      host: '',
+      bucket: '',
+      tokenHost: DEFAULT_TOKEN_HOST
+    })
+    this.props.saveToStore(this.state)
+    this.refs.container.success(`Reset Sucess`, `Settings`, {
+      closeButton: true
+    })
+  }
+
   render () {
     return (
       <div className='container'>
@@ -118,7 +134,7 @@ class Settings extends Component {
                   type='text'
                   value={this.state.host}
                   className='form-control'
-                  placeholder='Host(http(s)://xx.xx.xx/)'
+                  placeholder='七牛绑定域名(http(s)://xx.xx.xx/)'
                   onChange={this.onHost.bind(this)} />
               </div>
             </div>
@@ -134,9 +150,10 @@ class Settings extends Component {
             </div>
             <div className='form-group'>
               <div>
-                <button type='submit' className='btn btn-default' onClick={this.onSave.bind(this)}>
-                  Save
-                </button>
+
+                <FlatButton label='保存' onTouchTap={this.onSave.bind(this)}/>
+                <FlatButton label='重置' onTouchTap={this.onReset.bind(this)}/>
+
               </div>
             </div>
           </form>

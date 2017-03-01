@@ -5,6 +5,12 @@ export const API = {
   PROXY: 'proxy'
 }
 
+export const PATH = {
+   Home:"/",
+   Settings:"/settings",
+   Upload:"/upload"
+}
+
 export const AK = 'ak'
 export const SK = 'sk'
 export const BUCKET = 'bucket'
@@ -12,7 +18,10 @@ export const HOST = 'host'
 export const TOKEN_HOST = 'token_host'
 export const QINIU_UPLOAD_HTTPS = 'https://up.qbox.me/'
 export const QINIU_UPLOAD_HTTP = 'http://upload.qiniu.com/'
+export const DEFAULT_TOKEN_HOST = "http://host.kutear.com:8080/"
+export const COOKIE_AGE = 100
 const QINIUHOST = 'http://rsf.qbox.me'
+
 
 export function setCookie (c_name, value, expiredays) {
   var exdate = new Date()
@@ -86,6 +95,30 @@ export function fetchFolder (proxyHost, bucket, prefix, ak, sk, callback) {
     })
     .catch((err) => {
       callback.onError()})
+}
+
+export function getFileSize(bits){
+  if(bits > 1000){
+    var kb = bits / 1000.0
+    if (kb > 1000){
+        var mb = kb / 1000.0
+        if(mb > 1000){
+          var gb = mb / 1000.0
+          if(gb > 1000){  
+            var tb = gb / 1000.0
+            return tb + "TB"
+          }else{
+            return gb+"GB"
+          }
+        }else{
+          return mb+"MB"
+        }
+    }else{
+      return kb+"KB"
+    }
+  }else{
+    return bits+"B"
+  }
 }
 
 function qiniuSign (key, data) {

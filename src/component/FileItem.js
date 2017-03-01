@@ -4,6 +4,10 @@ import "../res/css/FileItem.css"
 
 import CopyToClipboard from 'react-copy-to-clipboard';
 import {ToastContainer,ToastMessage} from "react-toastr";
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import FlatButton from 'material-ui/FlatButton';
+import {getFileSize} from "./Common"
+
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation);
 
@@ -15,17 +19,46 @@ class FileItem extends Component {
             });
     }
 
+    onDelete(){
+        //todo
+    }
+
 
     render() {
         var markdown = "![http://kutear.com]("+this.props.imageUrl+")";
 
         return (
-            <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3 file-container">
+            <div className="col-xs-12 col-sm-6 col-md-6 col-lg-4 file-container">
                 <ToastContainer
                     toastMessageFactory={ToastMessageFactory}
                     ref="container"
                     className="toast-top-right"/>
-                <div className="center-block card card-1" >
+
+                <Card>
+                    <CardMedia
+                    overlay={<CardTitle title={getFileSize(this.props.size)} />}
+                    >
+                    <img src={this.props.imageUrl} alt={this.props.imageUrl} className="image-item"/>
+                    </CardMedia>
+                    <CardTitle subtitle={this.props.date} />
+                    <CardActions>
+
+                    <FlatButton label="删除" onTouchTap={this.onDelete.bind(this)}/>
+                    
+                    <CopyToClipboard text={this.props.imageUrl}
+                                        onCopy={this.copy}>
+                            <FlatButton label="复制" />
+                    </CopyToClipboard>
+                    
+                    <a href={this.props.imageUrl} target="_blank">
+                        <FlatButton label="打开" />
+                    </a>
+                    
+                    </CardActions>
+                </Card>
+
+
+                {/*<div className="center-block card card-1" >
                     <a href={this.props.imageUrl} target="_blank">
                         <img src={this.props.imageUrl} className="image-item" alt={this.props.imageUrl}/>
                     </a>
@@ -40,7 +73,7 @@ class FileItem extends Component {
                         onCopy={this.copy}>
                         <button className="btn btn-primary" type="button" >Copy imageUrl</button>
                     </CopyToClipboard>
-                </div>
+                </div>*/}
             </div>
         );
     }

@@ -156,7 +156,10 @@ class ReactQiniu extends Component{
     //上传完成回调
     dealResult(json) {
         var lists = this.props.uploadList
+        var date = new Date();
+        json['date'] = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()
         lists.push(json);
+        console.log(lists)
         this.setState({
             uploadList: lists
         })
@@ -180,6 +183,8 @@ class ReactQiniu extends Component{
         var lists = temp.map(item => {
             return (
                 <FileItem key={item.key}
+                    hash={item.hash}
+                    date={item.date}
                     imageUrl={baseUrl + item.key}
                     fileName={item["x:filename"]}
                     size={item["x:size"]}/>
