@@ -1,30 +1,29 @@
+// Action
+export const MODIFY_AK = 'MODIFY_AK'
+export const MODIFY_SK = 'MODIFY_SK'
+export const MODIFY_HOST = 'MODIFY_HOST'
+export const MODIFY_BUCKET = 'MODIFY_BUCKET'
+export const MODIFY_TOKEN_HOST = 'MODIFY_TOKEN_HOST'
+export const MODIFY_CONFIG = 'MODIFY_CONFIG'
 
-//Action
-export const MODIFY_AK = "MODIFY_AK";
-export const MODIFY_SK = "MODIFY_SK";
-export const MODIFY_HOST = "MODIFY_HOST";
-export const MODIFY_BUCKET = "MODIFY_BUCKET";
-export const MODIFY_TOKEN_HOST = "MODIFY_TOKEN_HOST";
-export const MODIFY_CONFIG = "MODIFY_CONFIG";
-
-export function modifyAK(ak) {
-    return {
-        type: MODIFY_AK,
-        config: {
-            ak: ak
-        }
+export function modifyAK (ak) {
+  return {
+    type: MODIFY_AK,
+    config: {
+      ak: ak
     }
+  }
 }
 
-export function modifyConfig(ak, sk, bucket, host,tokenHost) {
-    return {
-        type: MODIFY_CONFIG,
-        config: {
-            ak: ak,
-            sk: sk,
-            bucket: bucket,
-            host: host,
-            tokenHost:tokenHost
-        }
+export function modifyConfig (ak, sk, bucket, host, tokenHost) {
+  return {
+    type: MODIFY_CONFIG,
+    config: {
+      ak: ak,
+      sk: sk,
+      bucket: bucket,
+      host: host,
+      tokenHost: tokenHost
     }
+  }
 }
