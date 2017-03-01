@@ -4,7 +4,7 @@ import React,{Component} from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
 import {connect} from "react-redux"
-import {getCookies,fetchUploadToken} from "./Common"
+import {getCookies,fetchUploadToken,API,QINIU_UPLOAD_HTTP,QINIU_UPLOAD_HTTPS} from "./Common"
 
 function mapStateToProps(state) {
     return {
@@ -115,7 +115,7 @@ class ReactQiniu extends Component{
         var KEY = key;
         var body = "ak=" + AK + "&&sk=" + SK + "&&bucket=" + BUCKET + "&&key=" + KEY;
         var that = this
-        fetchUploadToken(body,this.props.tokenHost,{
+        fetchUploadToken(body,this.props.tokenHost+API.UPLOAD_TOKEN,{
                 onError(){
 
                 },
@@ -135,9 +135,9 @@ class ReactQiniu extends Component{
         }
         var token = json["token"];
 
-        var uploadUrl = 'http://upload.qiniu.com'
+        var uploadUrl = QINIU_UPLOAD_HTTP
         if (window.location.protocol === 'https:') {
-            uploadUrl = 'https://up.qbox.me/'
+            uploadUrl = QINIU_UPLOAD_HTTPS
         }
         request.post(uploadUrl)
                .field('key', key)

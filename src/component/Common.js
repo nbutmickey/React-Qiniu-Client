@@ -1,11 +1,19 @@
 import hmacsha1 from 'hmacsha1'
 
 
+export const API = {
+    UPLOAD_TOKEN : "uploadToken",
+    PROXY : "proxy"
+}
+
 export const AK = "ak";
 export const SK = "sk";
 export const BUCKET = "bucket";
 export const HOST = "host";
 export const TOKEN_HOST = "token_host";
+export const QINIU_UPLOAD_HTTPS = "https://up.qbox.me/";
+export const QINIU_UPLOAD_HTTP = "http://upload.qiniu.com/";
+const QINIUHOST = "http://rsf.qbox.me";
 
 
 export function setCookie(c_name, value, expiredays) {
@@ -37,7 +45,9 @@ export function fetchUploadToken(body,host,callback){
             headers: header,
             body: body,
         })
-        .then((res)=>res.json())
+        .then((res)=>{
+            return res.json()
+        })
         .then((json)=>{
             if(json["code"] == 200){
                 callback.onSuccess(json)
@@ -59,23 +69,26 @@ export function genToken(path,body,sk){
     return qiniuSign(sk,data);
 }
 
-export function fetchFolder(bucket,prefix,ak,sk,callback){
-    var host = "http://rsf.qbox.me";
+export function fetchFolder(proxyHost,bucket,prefix,ak,sk,callback){
+    var host = QINIUHOST;
     var query = "/list?bucket="+bucket+"&marker=&limit=1000&delimiter=/&prefix="+prefix;
     var header = {
         "Content-Type":"application/x-www-form-urlencoded",
-        "Authorization":"QBox "+ak+":"+genToken(query,"",sk)
+        "Authorization":"QBox "+ak+":"+genToken(query,"",sk),
+        "requestUrl":host+query
     }
-    fetch(host+query,{
+    fetch(proxyHost+API.PROXY,{
         headers:header,
         method:"POST"
     })
-    .then((res)=>{res.json()})
-    .then((json)=>{console.log(json)})
-
+    .then((res)=>{
+        return res.json()
+    })
+    .then((json)=>{
+        callback.onSuccess(json)
+    })
+    .catch((err)=>{callback.onError()})
 }
-
-
 
 function qiniuSign(key, data) {
     var temp = hmacsha1(key, data);
