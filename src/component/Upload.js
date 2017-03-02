@@ -25,7 +25,6 @@ class Upload extends Component {
       height: '200px',
       color: '#aaa'
     }
-    var size = 200
     return (
       <div className='App'>
         <Qi

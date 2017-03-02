@@ -4,7 +4,7 @@ import "../res/css/FileItem.css"
 
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ToastContainer, ToastMessage } from "react-toastr";
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
+import { Card, CardActions, CardMedia, CardTitle } from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import { getFileSize } from "./Common"
 
@@ -25,7 +25,6 @@ class FileItem extends Component {
 
 
     render() {
-        var markdown = "![http://kutear.com](" + this.props.imageUrl + ")";
 
         return (
             <div className="col-xs-12 col-sm-6 col-md-6 col-lg-4 file-container">

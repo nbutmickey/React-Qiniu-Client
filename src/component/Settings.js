@@ -64,7 +64,7 @@ class Settings extends Component {
   }
 
   onSave () {
-    if (this.state.ak == '' || this.state.sk == '' || this.state.host == '' || this.state.bucket == '') {
+    if (this.state.ak === '' || this.state.sk === '' || this.state.host === '' || this.state.bucket === '') {
       this.refs.container.error(`Some Filed is Empty`, `Error`, {
         closeButton: true
       })

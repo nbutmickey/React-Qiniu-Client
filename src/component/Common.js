@@ -1,5 +1,7 @@
 import hmacsha1 from 'hmacsha1'
 
+/* eslint-disable */
+
 export const API = {
   UPLOAD_TOKEN: 'uploadToken',
   PROXY: 'proxy'
@@ -56,7 +58,7 @@ export function fetchUploadToken (body, host, callback) {
       return res.json()
     })
     .then((json) => {
-      if (json['code'] == 200) {
+      if (json['code'] === 200) {
         callback.onSuccess(json)
       }else {
         callback.onError()
@@ -67,7 +69,7 @@ export function fetchUploadToken (body, host, callback) {
 
 export function genToken (path, body, sk) {
   var data = path
-  if (body == undefined) {
+  if (body === undefined) {
     data = data + '\n'
   }else {
     data = data + '\n' + body

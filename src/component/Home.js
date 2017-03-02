@@ -45,7 +45,7 @@ class Home extends Component {
   renderContent() {
     return (
       <div className="container">
-        Load Success with
+        0f099a25bd63a7ce3b8468adf613f5a102f27f720f099a25bd63a7ce3b8468adf613f5a102f27f72
       </div>
     )
   }

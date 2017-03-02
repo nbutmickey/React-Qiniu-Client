@@ -4,7 +4,7 @@ import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
 import { connect } from "react-redux"
-import { getCookies, fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS } from "./Common"
+import { fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS } from "./Common"
 
 function mapStateToProps(state) {
     return {
