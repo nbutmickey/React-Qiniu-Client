@@ -86,7 +86,10 @@ class Settings extends Component {
       bucket: '',
       tokenHost: DEFAULT_TOKEN_HOST
     })
-    this.props.saveToStore(this.state)
+    
+    //setState是异步函数
+    setTimeout(()=>this.props.saveToStore(this.state),1000)
+
     this.refs.container.success(`Reset Sucess`, `Settings`, {
       closeButton: true
     })

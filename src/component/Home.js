@@ -6,27 +6,27 @@ import LinearProgress from 'material-ui/LinearProgress';
 // 文件操作
 class Home extends Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isInit: false,
-      folder:""
+      folder: ""
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.state.isInit) {
       return
     }
 
     var that = this
     fetchFolder(this.props.config.tokenHost,
-      this.props.config.bucket, '2017/', this.props.config.ak, this.props.config.sk, {
-        onError() {},
+      this.props.config.bucket, '', this.props.config.ak, this.props.config.sk, {
+        onError() { },
 
         onSuccess(json) {
           that.setState({
-            folder:json,
+            folder: json,
             isInit: true
           })
         }
@@ -34,7 +34,7 @@ class Home extends Component {
   }
 
   // 渲染加载中页面
-  renderLoading () {
+  renderLoading() {
     return (
       <div className="container">
         <LinearProgress mode="indeterminate" />
@@ -42,15 +42,15 @@ class Home extends Component {
     )
   }
 
-  renderContent () {
+  renderContent() {
     return (
       <div className="container">
-        Load Success with 
+        Load Success with
       </div>
     )
   }
 
-  render () {
+  render() {
     if (!this.state.isInit) {
       return this.renderLoading()
     } else {
@@ -59,7 +59,7 @@ class Home extends Component {
   }
 }
 
-function mapToProps (state) {
+function mapToProps(state) {
   return {
     config: state.config
   }

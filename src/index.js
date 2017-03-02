@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import Upload from './component/Upload'
 import Nav from './component/Nav'
@@ -12,9 +12,9 @@ import createLogger from 'redux-logger'
 import { Provider } from 'react-redux'
 import './res/css/index.css'
 import AppAction from './redux/Reducers'
-import { AK, SK, HOST, BUCKET, getCookies, TOKEN_HOST, DEFAULT_TOKEN_HOST,PATH} from './component/Common'
+import { AK, SK, HOST, BUCKET, getCookies, TOKEN_HOST, DEFAULT_TOKEN_HOST, PATH } from './component/Common'
 import { MuiThemeProvider } from 'material-ui'
-import injectTapEventPlugin from 'react-tap-event-plugin';
+import injectTapEventPlugin from 'react-tap-event-plugin'
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -40,28 +40,49 @@ var defaultState = {
 const logger = createLogger()
 let store = createStore(AppAction, defaultState, applyMiddleware(thunk, promise, logger))
 
-// 主页和上传页面要求设置
-function auth (nextState, replace, callback) {
-  var config = store.getState().config
-  if (config.ak === '' || config.sk === '' || config.host === '' ||
-    config.bucket === '' || config.tokenHost === '') {
-    confirm("请先在`设置`页面进行设置基本配置")
-    replace(PATH.Settings)
+
+class App extends Component {
+
+
+  constructor(props){
+    super(props)
+    this.state = {
+      leader:false
+    }
+    this.auth = this.auth.bind(this)
   }
-  callback()
+
+  // 主页和上传页面要求设置
+  auth(nextState, replace, callback) {
+    // var config = store.getState().config
+    // if (config.ak === '' || config.sk === '' || config.host === '' ||
+    //   config.bucket === '' || config.tokenHost === '') {
+    //   replace(PATH.Settings)
+    // }
+    callback()
+  }
+
+
+
+  render() {
+    return (
+      <MuiThemeProvider>
+          <Provider store={store}>
+            <Router history={hashHistory}>
+              <Route path={PATH.Home} component={Nav}>
+                <IndexRoute component={Home} onEnter={this.auth} />
+                <Route path={PATH.Upload} component={Upload} onEnter={this.auth} />
+                <Route path={PATH.Settings} component={Settings} />
+              </Route>
+            </Router>
+          </Provider>
+      </MuiThemeProvider>
+    );
+  }
 }
 
+
 ReactDOM.render(
-  <MuiThemeProvider>
-    <Provider store={store}>
-      <Router history={hashHistory}>
-        <Route path={PATH.Home} component={Nav}>
-          <IndexRoute component={Home} onEnter={auth} />
-          <Route path={PATH.Upload} component={Upload} onEnter={auth} />
-          <Route path={PATH.Settings} component={Settings} />
-        </Route>
-      </Router>
-    </Provider>
-  </MuiThemeProvider>,
+  <App />,
   document.getElementById('app')
 )

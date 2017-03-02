@@ -1,10 +1,10 @@
 import FileItem from "./FileItem"
 import "../res/css/Qiniu.css"
-import React,{Component} from "react"
+import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
-import {connect} from "react-redux"
-import {getCookies,fetchUploadToken,API,QINIU_UPLOAD_HTTP,QINIU_UPLOAD_HTTPS} from "./Common"
+import { connect } from "react-redux"
+import { getCookies, fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS } from "./Common"
 
 function mapStateToProps(state) {
     return {
@@ -15,7 +15,7 @@ function mapStateToProps(state) {
     }
 }
 
-class ReactQiniu extends Component{
+class ReactQiniu extends Component {
     static propTypes = {
         onDrop: React.PropTypes.func.isRequired,
         tokenHost: React.PropTypes.string.isRequired,
@@ -26,25 +26,24 @@ class ReactQiniu extends Component{
         accept: React.PropTypes.string,
         multiple: React.PropTypes.bool,
         // QiniutokenHost
-        uploadUrl: React.PropTypes.string,
-        uploadList: React.PropTypes.array,
+        uploadUrl: React.PropTypes.string
     }
 
     static defaultProps = {
         supportClick: true,
-        multiple: true,
-        uploadList: []
+        multiple: true
     }
-    
-    constructor(props){
+
+    constructor(props) {
         super(props)
-        this.state =  {
-            isDragActive: false
+        this.state = {
+            isDragActive: false,
+            uploadList: []
         }
         this.onDrop = this.onDrop.bind(this)
     }
 
-    onClick () {
+    onClick() {
         if (this.props.supportClick) {
             this.open();
         }
@@ -56,14 +55,14 @@ class ReactQiniu extends Component{
         fileInput.click();
     }
 
-    onDragLeave (e) {
+    onDragLeave(e) {
         e.preventDefault()
         this.setState({
             isDragActive: false
         });
     }
 
-    onDragOver (e) {
+    onDragOver(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'copy';
 
@@ -115,23 +114,23 @@ class ReactQiniu extends Component{
         var KEY = key;
         var body = "ak=" + AK + "&&sk=" + SK + "&&bucket=" + BUCKET + "&&key=" + KEY;
         var that = this
-        fetchUploadToken(body,this.props.tokenHost+API.UPLOAD_TOKEN,{
-                onError(){
+        fetchUploadToken(body, this.props.tokenHost + API.UPLOAD_TOKEN, {
+            onError() {
 
-                },
+            },
 
-                onSuccess(json){
-                    that.dealToken(json,key,file)
-                }
-                
+            onSuccess(json) {
+                that.dealToken(json, key, file)
+            }
+
         })
     }
 
     //获取到Token之后进行上传
-    dealToken(json,key,file){
+    dealToken(json, key, file) {
         if (json["code"] !== 200) {
-                        console.log("Token 生成失败");
-                        return;
+            console.log("Token 生成失败");
+            return;
         }
         var token = json["token"];
 
@@ -140,28 +139,41 @@ class ReactQiniu extends Component{
             uploadUrl = QINIU_UPLOAD_HTTPS
         }
         request.post(uploadUrl)
-               .field('key', key)
-               .field('token', token)
-               .field('x:filename', file.name)
-               .field('x:size', file.size)
-               .attach('file', file, file.name)
-               .set('Accept', 'application/json')
-               .then((res) => {
-                   this.dealResult(res.body);
-               })
+            .field('key', key)
+            .field('token', token)
+            .field('x:filename', file.name)
+            .field('x:size', file.size)
+            .attach('file', file, file.name)
+            .set('Accept', 'application/json')
+            .then((res) => {
+                this.dealResult(res.body);
+            })
 
-                
+
     }
 
     //上传完成回调
     dealResult(json) {
-        var lists = this.props.uploadList
+        var lists = this.state.uploadList
         var date = new Date();
-        json['date'] = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()
+        json['date'] = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()
         lists.push(json);
-        console.log(lists)
         this.setState({
             uploadList: lists
+        })
+    }
+
+    onRemove(key) {
+        //TODO 调用网络请求执行删除
+        var lists = this.state.uploadList.filter((item)=>{
+            if(item.key === key){
+                return false
+            }else{
+                return true
+            }
+        })
+        this.setState({
+            uploadList:lists
         })
     }
 
@@ -178,16 +190,18 @@ class ReactQiniu extends Component{
         var inputStyle = {
             display: 'none'
         }
-        var baseUrl = getCookies("host");
-        var temp = this.props.uploadList.reverse();
+        var baseUrl = this.props.host
+        var temp = this.state.uploadList.reverse();
         var lists = temp.map(item => {
             return (
                 <FileItem key={item.key}
+                    fileKey={item.key}
                     hash={item.hash}
                     date={item.date}
+                    remove={this.onRemove.bind(this)}
                     imageUrl={baseUrl + item.key}
                     fileName={item["x:filename"]}
-                    size={item["x:size"]}/>
+                    size={item["x:size"]} />
             )
         })
 
@@ -203,7 +217,7 @@ class ReactQiniu extends Component{
                     <input style={inputStyle}
                         type="file"
                         ref="fileInput"
-                        multiple={this.props.multiple}  
+                        multiple={this.props.multiple}
                         onChange={this.onDrop.bind(this)}
                         accept={this.props.accept} />
                     {this.props.children}
