@@ -15,7 +15,7 @@ export default class FolderList extends Component{
         return(
             <ListItem leftAvatar={<Avatar icon={<FileFolder />} />} 
                 primaryText={this.props.item} 
-                onTouchTap = {this.onClick.bind(this)} 
+                onTouchTap={this.onClick.bind(this)} 
                 />
         )
     }
