@@ -7,9 +7,9 @@ import { hashHistory } from 'react-router'
 
 
 /**
- * A modal dialog can only be closed by selecting one of the actions.
+ * 引导用户进行设置
  */
-export default class DialogExampleModal extends Component {
+export default class Leader extends Component {
 
   handleClose(){
     hashHistory.push(PATH.Settings)

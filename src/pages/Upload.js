@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Qi from './Qiniu'
+import Qi from '../component/Qiniu'
 import '../res/css/Upload.css'
 import { connect } from 'react-redux'
 

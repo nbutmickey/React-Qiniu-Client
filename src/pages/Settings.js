@@ -3,7 +3,7 @@ import { ToastContainer, ToastMessage } from 'react-toastr'
 import '../res/css/Settings.css'
 import { connect } from 'react-redux'
 import { modifyConfig } from '../redux/Actions'
-import { DEFAULT_TOKEN_HOST } from './Common'
+import { DEFAULT_TOKEN_HOST } from '../component/Common'
 import FlatButton from 'material-ui/FlatButton'
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation)

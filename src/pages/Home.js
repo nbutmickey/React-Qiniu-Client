@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { fetchFolder } from './Common'
+import { fetchFolder } from '../component/Common'
 import { connect } from 'react-redux'
 import LinearProgress from 'material-ui/LinearProgress'
-import Display from './Display'
+import Display from '../component/Display'
 
 // 文件操作
 class Home extends Component {

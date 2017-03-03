@@ -4,7 +4,7 @@ import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
 import { connect } from "react-redux"
-import { fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS } from "./Common"
+import { fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS,filePrefix,formatDate} from "./Common"
 
 function mapStateToProps(state) {
     return {
@@ -105,8 +105,7 @@ class ReactQiniu extends Component {
     upload(file) {
         if (!file || file.size === 0) return null;
         var key = file.preview.split('/').pop() + '.' + file.name.split('.').pop();
-        var date = new Date();
-        var pre = date.getFullYear() + "/" + (1 + date.getMonth()) + "/" + date.getDate() + "/";
+        var pre = filePrefix()
         key = pre + key;
         var AK = this.props.ak;
         var SK = this.props.sk;
@@ -156,7 +155,7 @@ class ReactQiniu extends Component {
     dealResult(json) {
         var lists = this.state.uploadList
         var date = new Date();
-        json['date'] = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes()
+        json['date'] = formatDate(date.valueOf()/1000)
         lists.push(json);
         this.setState({
             uploadList: lists

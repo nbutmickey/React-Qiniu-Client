@@ -8,9 +8,9 @@ export const API = {
 }
 
 export const PATH = {
-   Home:"/",
-   Settings:"/settings",
-   Upload:"/upload"
+  Home: '/',
+  Settings: '/settings',
+  Upload: '/upload'
 }
 
 export const AK = 'ak'
@@ -20,10 +20,9 @@ export const HOST = 'host'
 export const TOKEN_HOST = 'token_host'
 export const QINIU_UPLOAD_HTTPS = 'https://up.qbox.me/'
 export const QINIU_UPLOAD_HTTP = 'http://upload.qiniu.com/'
-export const DEFAULT_TOKEN_HOST = "http://host.kutear.com:8080/"
+export const DEFAULT_TOKEN_HOST = 'http://host.kutear.com:8080/'
 export const COOKIE_AGE = 100
 const QINIUHOST = 'http://rsf.qbox.me'
-
 
 export function setCookie (c_name, value, expiredays) {
   var exdate = new Date()
@@ -99,28 +98,66 @@ export function fetchFolder (proxyHost, bucket, prefix, ak, sk, callback) {
       callback.onError()})
 }
 
-export function getFileSize(bits){
-  if(bits > 1000){
+export function getFileSize (bits) {
+  if (bits > 1000) {
     var kb = bits / 1000.0
-    if (kb > 1000){
-        var mb = kb / 1000.0
-        if(mb > 1000){
-          var gb = mb / 1000.0
-          if(gb > 1000){  
-            var tb = gb / 1000.0
-            return tb + "TB"
-          }else{
-            return gb+"GB"
-          }
-        }else{
-          return mb+"MB"
+    if (kb > 1000) {
+      var mb = kb / 1000.0
+      if (mb > 1000) {
+        var gb = mb / 1000.0
+        if (gb > 1000) {
+          var tb = gb / 1000.0
+          return tb + 'TB'
+        }else {
+          return gb + 'GB'
         }
-    }else{
-      return kb+"KB"
+      }else {
+        return mb + 'MB'
+      }
+    }else {
+      return kb + 'KB'
     }
-  }else{
-    return bits+"B"
+  }else {
+    return bits + 'B'
   }
+}
+
+export function formatDate (timestamp) {
+  var time = new Date(timestamp * 1000)
+  var y = time.getFullYear()
+  var m = time.getMonth() + 1
+  var d = time.getDate()
+  var h = time.getHours()
+  var mm = time.getMinutes()
+  var s = time.getSeconds()
+  return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s)
+}
+
+// 获取上级目录
+export function getBackPath (path, sp) {
+  var arrayOfStrings = path.split(sp)
+  if (arrayOfStrings.length > 2) {
+    var res = ''
+    for (var i = 0;i < arrayOfStrings.length - 2;i++) {
+      res += arrayOfStrings[i] + '/'
+    }
+    return res
+  }else {
+    return ''
+  }
+}
+
+// 上传时的文件前缀
+export function filePrefix () {
+  var time = new Date()
+  var y = time.getFullYear()
+  var m = time.getMonth() + 1
+  var d = time.getDate()
+  return y + '/' + add0(m) + '/' + add0(d) + '/'
+}
+
+function add0 (m) {
+  return m < 10 ? '0' + m : m
 }
 
 function qiniuSign (key, data) {
