@@ -7,24 +7,31 @@ import Display from './Display'
 // 文件操作
 class Home extends Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
+      isLoading: false,
+      folder: '',
       isInit: false,
-      folder: ''
+      pathStack:[]
     }
 
     this.reload = this.reload.bind(this)
   }
 
-  reload (pre) {
+  reload(pre) {
+    this.setState({
+      isLoading: true
+    })
+
     var that = this
     fetchFolder(this.props.config.tokenHost,
       this.props.config.bucket, pre, this.props.config.ak, this.props.config.sk, {
-        onError() {},
+        onError() { },
         onSuccess(json) {
           that.setState({
             folder: json,
+            isLoading: false,
             isInit: true,
             parent: pre
           })
@@ -32,15 +39,12 @@ class Home extends Component {
       })
   }
 
-  componentDidMount () {
-    if (this.state.isInit) {
-      return
-    }
+  componentDidMount() {
     this.reload('')
   }
 
   // 渲染加载中页面
-  renderLoading () {
+  renderLoading() {
     return (
       <div className='container'>
         <LinearProgress mode='indeterminate' />
@@ -48,7 +52,7 @@ class Home extends Component {
     )
   }
 
-  renderContent () {
+  renderContent() {
     return (
       <div className='container'>
         <Display fileList={this.state.folder} reload={this.reload} parent={this.state.parent} basePath={this.props.config.host} />
@@ -56,16 +60,26 @@ class Home extends Component {
     )
   }
 
-  render () {
-    if (!this.state.isInit) {
-      return this.renderLoading()
-    } else {
-      return this.renderContent()
+  render() {
+    var loadingComponent = ""
+    if (this.state.isLoading) {
+      loadingComponent = this.renderLoading();
     }
+
+    var contentComponent = ""
+    if (this.state.isInit) {
+      contentComponent = this.renderContent();
+    }
+    return (
+      <div className='container'>
+        {loadingComponent}
+        {contentComponent}
+      </div>
+    )
   }
 }
 
-function mapToProps (state) {
+function mapToProps(state) {
   return {
     config: state.config
   }

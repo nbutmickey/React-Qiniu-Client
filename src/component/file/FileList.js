@@ -14,12 +14,11 @@ export default class FileList extends Component{
             thumb = file
         }
 
-
-
+        var shortName = this.props.item.key.replace(this.props.parent,"")
 
         return(
             <ListItem leftAvatar={<Avatar src={thumb} />} 
-                primaryText={this.props.item.key} 
+                primaryText={shortName} 
                 secondaryText={this.props.item.putTime} 
                 />
         )
