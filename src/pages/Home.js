@@ -40,7 +40,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.reload('')
+    this.reload('') 
   }
 
   // 渲染加载中页面

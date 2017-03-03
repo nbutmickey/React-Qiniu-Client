@@ -4,7 +4,8 @@ import FileList from './file/FileList'
 import FolderList from './file/FolderList'
 import Drawer from 'material-ui/Drawer'
 import Divider from 'material-ui/Divider'
-import {getBackPath} from "./Common"
+import { getBackPath } from './Common'
+import PathNav from './PathNav'
 
 export default class Display extends Component {
 
@@ -49,13 +50,13 @@ export default class Display extends Component {
     // 返回上级目录
     if (this.props.parent !== '') {
       folderComponent.push((<div key='..' className='col-md-12 col-xs-12 col-lg-12 col-sm-12'>
-                           <FolderList
-                             item='..'
-                             open={this.openFolder.bind(this)}
-                             nextPath={getBackPath(this.props.parent,"/")}
-                             parent={this.props.parent} />
-                           <Divider />
-                         </div>))
+                              <FolderList
+                                item='..'
+                                open={this.openFolder.bind(this)}
+                                nextPath={getBackPath(this.props.parent, '/')}
+                                parent={this.props.parent} />
+                              <Divider />
+                            </div>))
     }
 
     // 当前目录存在文件夹
@@ -75,7 +76,7 @@ export default class Display extends Component {
 
     var file = this.props.fileList.items
     var fileComponent = file.map((item) => {
-      return (<div key={item.hash+item.key} className='col-md-12 col-xs-12 col-lg-12 col-sm-12'>
+      return (<div key={item.hash + item.key} className='col-md-12 col-xs-12 col-lg-12 col-sm-12'>
                 <FileList
                   item={item}
                   basePath={this.props.basePath}
@@ -87,7 +88,7 @@ export default class Display extends Component {
     })
 
     var bg = {
-      backgroundColor:'#fff'
+      backgroundColor: '#fff'
     }
 
     return (
@@ -96,7 +97,7 @@ export default class Display extends Component {
           {/* TODO 文件内容预览 */}
           {this.state.showItem.hash}
         </Drawer>
-        {this.props.parent}
+        <PathNav path={this.props.parent} open={this.openFolder.bind(this)}/>
         <List className='row' style={bg}>
           <Divider />
           {folderComponent}
