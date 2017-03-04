@@ -43,13 +43,12 @@ export default class PathNav extends Component {
 
     var pathCompents = []
     for(i=0;i<pathObjs.length;i++){
-      //var onClick = this.onClick
        (function(click,i) {
           var item = pathObjs[i]
           if(i!==pathObjs.length-1){
             pathCompents.push(<li key={i+item.value}><a href="#" onClick={() => {click(item.value)}} >{item.showName}</a></li>)
           }else{
-            pathCompents.push(<li key={i+item.value}><a href="#" className="active">{item.showName}</a></li>)
+            pathCompents.push(<li key={i+item.value} className="active"><a href="#" >{item.showName}</a></li>)
           }
        })(this.onClick,i)
       

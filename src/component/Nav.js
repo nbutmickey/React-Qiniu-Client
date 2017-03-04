@@ -20,9 +20,14 @@ class Nav extends Component {
   }
 
   render () {
+    var bodyStyle={
+      paddingTop:70
+    }
+
+
     return (
       <div>
-        <nav className='navbar navbar-default '>
+        <nav className='navbar navbar-default navbar-fixed-top' >
           <div className='container'>
               <CardActions>
                 <Link to={PATH.Home}>
@@ -37,7 +42,7 @@ class Nav extends Component {
               </CardActions>
           </div>
         </nav>
-        <div className='container'>
+        <div className='container' style={bodyStyle}>
           {this.getChild()}
         </div>
       </div>

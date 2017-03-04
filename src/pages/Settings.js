@@ -97,7 +97,7 @@ class Settings extends Component {
 
   render () {
     return (
-      <div className='container'>
+      <div className='container Settings-Content' >
         <ToastContainer toastMessageFactory={ToastMessageFactory} ref='container' className='toast-top-right' />
         <div className='col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 col-md-4 col-md-offest-4 col-lg-4 col-lg-offest-6 centerInParent'>
           <form className='form-horizontal'>

@@ -6,6 +6,7 @@ import Drawer from 'material-ui/Drawer'
 import Divider from 'material-ui/Divider'
 import { getBackPath } from '../Common'
 import PathNav from './PathNav'
+import FilePreViewer from "./FilePreViewer"
 
 export default class Display extends Component {
 
@@ -87,19 +88,14 @@ export default class Display extends Component {
       )
     })
 
-    var bg = {
-      backgroundColor: '#fff'
-    }
-
     return (
       <div>
         <Drawer width={400} openSecondary={true} open={this.state.openDetails}>
           {/* TODO 文件内容预览 */}
-          {this.state.showItem.hash}
+          <FilePreViewer file={this.state.showItem}  basePath={this.props.basePath}/>
         </Drawer>
         <PathNav path={this.props.parent} open={this.openFolder.bind(this)}/>
-        <List className='row' style={bg}>
-          <Divider />
+        <List className='row'>
           {folderComponent}
           {fileComponent}
         </List>
