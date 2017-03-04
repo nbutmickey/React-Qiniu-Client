@@ -4,7 +4,7 @@ import FileList from './file/FileList'
 import FolderList from './file/FolderList'
 import Drawer from 'material-ui/Drawer'
 import Divider from 'material-ui/Divider'
-import { getBackPath } from './Common'
+import { getBackPath } from '../Common'
 import PathNav from './PathNav'
 
 export default class Display extends Component {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Qi from '../component/Qiniu'
+import Qi from '../component/upload/Qiniu'
 import '../res/css/Upload.css'
 import { connect } from 'react-redux'
 
@@ -26,7 +26,7 @@ class Upload extends Component {
       color: '#aaa'
     }
     return (
-      <div className='App'>
+      <div className='container'>
         <Qi
           onDrop={this.onDrop}
           tokenHost={this.props.tokenHost}

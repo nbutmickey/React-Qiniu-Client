@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import "../res/css/FileItem.css"
+import "../../res/css/FileItem.css"
 
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { ToastContainer, ToastMessage } from "react-toastr";
 import { Card, CardActions, CardMedia, CardTitle } from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
-import { getFileSize } from "./Common"
+import { getFileSize } from "../Common"
 
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation);

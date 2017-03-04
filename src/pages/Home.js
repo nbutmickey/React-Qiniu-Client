@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { fetchFolder } from '../component/Common'
 import { connect } from 'react-redux'
 import LinearProgress from 'material-ui/LinearProgress'
-import Display from '../component/Display'
+import Display from '../component/home/Display'
 
 // 文件操作
 class Home extends Component {

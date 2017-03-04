@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import Avatar from 'material-ui/Avatar'
 import { ListItem } from 'material-ui/List'
-import file from '../../res/img/file.svg'
-import { formatDate } from '../Common'
+import file from '../../../res/img/file.svg'
+import { formatDate } from '../../Common'
 
 export default class FileList extends Component {
 

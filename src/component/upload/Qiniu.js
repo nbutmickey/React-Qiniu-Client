@@ -1,10 +1,10 @@
 import FileItem from "./FileItem"
-import "../res/css/Qiniu.css"
+import "../../res/css/Qiniu.css"
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
 import { connect } from "react-redux"
-import { fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS,filePrefix,formatDate} from "./Common"
+import { fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS,filePrefix,formatDate} from "../Common"
 
 function mapStateToProps(state) {
     return {
