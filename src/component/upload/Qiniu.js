@@ -4,14 +4,15 @@ import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
 import { connect } from "react-redux"
-import { fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS,filePrefix,formatDate} from "../Common"
+import { fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS,filePrefix,formatDate,deleteFile} from "../Common"
 
 function mapStateToProps(state) {
     return {
         ak: state.config.ak,
         sk: state.config.sk,
         host: state.config.host,
-        bucket: state.config.bucket
+        bucket: state.config.bucket,
+        proxyHost:state.config.tokenHost
     }
 }
 
@@ -164,15 +165,21 @@ class ReactQiniu extends Component {
 
     onRemove(key) {
         //TODO 调用网络请求执行删除
-        var lists = this.state.uploadList.filter((item)=>{
-            if(item.key === key){
-                return false
-            }else{
-                return true
-            }
-        })
-        this.setState({
-            uploadList:lists
+        var that = this
+        deleteFile(this.props.proxyHost,key,this.props.bucket,this.props.ak,this.props.sk,{
+            onSuccess(){
+                var lists = that.state.uploadList.filter((item)=>{
+                    if(item.key === key){
+                        return false
+                    }else{
+                        return true
+                    }
+                })
+                that.setState({
+                    uploadList:lists
+                })
+            },
+            onError(){}
         })
     }
 

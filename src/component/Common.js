@@ -1,4 +1,4 @@
-import hmacsha1 from 'hmacsha1'
+import b64hmacsha1 from 'hmacsha1'
 
 /* eslint-disable */
 
@@ -22,7 +22,10 @@ export const QINIU_UPLOAD_HTTPS = 'https://up.qbox.me/'
 export const QINIU_UPLOAD_HTTP = 'http://upload.qiniu.com/'
 export const DEFAULT_TOKEN_HOST = 'http://host.kutear.com:8080/'
 export const COOKIE_AGE = 100
+//获取列表
 const QINIUHOST = 'http://rsf.qbox.me'
+//删除
+const QINIUHOST_2 = 'http://rs.qiniu.com'
 
 export function setCookie (c_name, value, expiredays) {
   var exdate = new Date()
@@ -95,7 +98,38 @@ export function fetchFolder (proxyHost, bucket, prefix, ak, sk, callback) {
       callback.onSuccess(json)
     })
     .catch((err) => {
-      callback.onError()})
+      callback.onError()
+    })
+}
+
+export function deleteFile (proxyHost, key, bucket, ak, sk, callback) {
+  var host = QINIUHOST_2
+  var query = '/delete/' + urlsafe_b64encode(bucket + ':' + key)
+  var header = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Authorization': 'QBox ' + ak + ':' + genToken(query, '', sk),
+    'requestUrl': host + query
+  }
+  fetch(proxyHost + API.PROXY, {
+    headers: header,
+    method: 'POST'
+  })
+    .then((res) => {
+      if(res.ok){
+        res.text().then((text)=>{
+            if(text.length === 0){
+              callback.onSuccess()
+            }else{
+              callback.onError()
+            }
+        })
+      }else{
+        callback.onError()
+      }
+    })
+    .catch((err) => {
+      callback.onError()
+    })
 }
 
 export function getFileSize (bits) {
@@ -161,10 +195,20 @@ function add0 (m) {
 }
 
 function qiniuSign (key, data) {
-  var temp = hmacsha1(key, data)
-  return urlsafe_b64encode(temp)
+  var temp = b64hmacsha1(key, data)
+  return urlsafe(temp)
+}
+
+function urlsafe (data) {
+  return data.replace(/\//g, '_').replace(/\+/g, '-')
+}
+
+function base64 (str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+    return String.fromCharCode('0x' + p1)
+  }))
 }
 
 function urlsafe_b64encode (data) {
-  return data.replace(/\//g, '_').replace(/\+/g, '-')
+  return urlsafe(base64(data))
 }

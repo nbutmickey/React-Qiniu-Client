@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { fetchFolder } from '../component/Common'
+import { fetchFolder,deleteFile } from '../component/Common'
 import { connect } from 'react-redux'
 import LinearProgress from 'material-ui/LinearProgress'
 import Display from '../component/home/Display'
@@ -17,6 +17,30 @@ class Home extends Component {
     }
 
     this.reload = this.reload.bind(this)
+  }
+
+  delete(key){
+      // var that = this;
+      deleteFile(this.props.config.tokenHost,
+                key,
+                this.props.config.bucket,
+                this.props.config.ak, 
+                this.props.config.sk,{
+                  onSuccess(){
+                      // var lists = that.state.folder.filter((key)=>{
+                      //     if(item.key === key){
+                      //         return false
+                      //     }else{
+                      //         return true
+                      //     }
+                      // })
+                      // that.setState({
+                      //     uploadList:lists
+                      // })
+                      //TODO 文件删除后的刷新
+                  },
+                  onError(){}
+                })
   }
 
   reload(pre) {
@@ -40,7 +64,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    this.reload('') 
+    this.reload('2017/03/17/') 
   }
 
   // 渲染加载中页面
@@ -55,7 +79,11 @@ class Home extends Component {
   renderContent() {
     return (
       <div className='container'>
-        <Display fileList={this.state.folder} reload={this.reload} parent={this.state.parent} basePath={this.props.config.host} />
+        <Display fileList={this.state.folder} 
+                 reload={this.reload} 
+                 parent={this.state.parent} 
+                 delete={this.delete.bind(this)}
+                 basePath={this.props.config.host} />
       </div>
     )
   }

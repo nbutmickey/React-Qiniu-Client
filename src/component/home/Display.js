@@ -4,7 +4,7 @@ import FileList from './file/FileList'
 import FolderList from './file/FolderList'
 import Drawer from 'material-ui/Drawer'
 import Divider from 'material-ui/Divider'
-import { getBackPath } from '../Common'
+import { getBackPath} from '../Common'
 import PathNav from './PathNav'
 import FilePreViewer from "./FilePreViewer"
 
@@ -23,6 +23,11 @@ export default class Display extends Component {
         putTime: 0
       }
     }
+  }
+
+
+  delete(key){
+    this.props.delete(key)
   }
 
   openFolder (path) {
@@ -82,6 +87,7 @@ export default class Display extends Component {
                   item={item}
                   basePath={this.props.basePath}
                   parent={this.props.parent}
+                  delete={this.delete.bind(this)}
                   showFile={this.showFile.bind(this)} />
                 <Divider />
               </div>
