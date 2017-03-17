@@ -22,9 +22,9 @@ export const QINIU_UPLOAD_HTTPS = 'https://up.qbox.me/'
 export const QINIU_UPLOAD_HTTP = 'http://upload.qiniu.com/'
 export const DEFAULT_TOKEN_HOST = 'http://host.kutear.com:8080/'
 export const COOKIE_AGE = 100
-//获取列表
+// 获取列表
 const QINIUHOST = 'http://rsf.qbox.me'
-//删除
+// 删除
 const QINIUHOST_2 = 'http://rs.qiniu.com'
 
 export function setCookie (c_name, value, expiredays) {
@@ -115,15 +115,47 @@ export function deleteFile (proxyHost, key, bucket, ak, sk, callback) {
     method: 'POST'
   })
     .then((res) => {
-      if(res.ok){
-        res.text().then((text)=>{
-            if(text.length === 0){
-              callback.onSuccess()
-            }else{
-              callback.onError()
-            }
+      if (res.ok) {
+        res.text().then((text) => {
+          if (text.length === 0) {
+            callback.onSuccess()
+          }else {
+            callback.onError()
+          }
         })
-      }else{
+      }else {
+        callback.onError()
+      }
+    })
+    .catch((err) => {
+      callback.onError()
+    })
+}
+
+export function renameFile (proxyHost, src, desc, bucket, ak, sk, callback) {
+  var host = QINIUHOST_2
+  var srcEncode = urlsafe_b64encode(bucket + ':' + src)
+  var descEncode = urlsafe_b64encode(bucket + ':' + desc)
+  var query = '/move/' + srcEncode + '/' + descEncode + '/force/false'
+  var header = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Authorization': 'QBox ' + ak + ':' + genToken(query, '', sk),
+    'requestUrl': host + query
+  }
+  fetch(proxyHost + API.PROXY, {
+    headers: header,
+    method: 'POST'
+  })
+    .then((res) => {
+      if (res.ok) {
+        res.text().then((text) => {
+          if (text.length === 0) {
+            callback.onSuccess()
+          }else {
+            callback.onError()
+          }
+        })
+      }else {
         callback.onError()
       }
     })

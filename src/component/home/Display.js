@@ -25,11 +25,6 @@ export default class Display extends Component {
     }
   }
 
-
-  delete(key){
-    this.props.delete(key)
-  }
-
   openFolder (path) {
     this.setState({
       isLoading: true
@@ -87,7 +82,8 @@ export default class Display extends Component {
                   item={item}
                   basePath={this.props.basePath}
                   parent={this.props.parent}
-                  delete={this.delete.bind(this)}
+                  delete={this.props.delete.bind(this)}
+                  rename={this.props.rename.bind(this)}
                   showFile={this.showFile.bind(this)} />
                 <Divider />
               </div>

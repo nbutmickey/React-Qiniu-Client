@@ -4,6 +4,8 @@ import React, { Component } from "react"
 import ReactDOM from "react-dom"
 import request from "superagent-bluebird-promise"
 import { connect } from "react-redux"
+import md5 from "MD5"
+
 import { fetchUploadToken, API, QINIU_UPLOAD_HTTP, QINIU_UPLOAD_HTTPS,filePrefix,formatDate,deleteFile} from "../Common"
 
 function mapStateToProps(state) {
@@ -105,7 +107,7 @@ class ReactQiniu extends Component {
     //文件上传
     upload(file) {
         if (!file || file.size === 0) return null;
-        var key = file.preview.split('/').pop() + '.' + file.name.split('.').pop();
+        var key = md5(file.preview.split('/').pop()) + '.' + file.name.split('.').pop();
         var pre = filePrefix()
         key = pre + key;
         var AK = this.props.ak;
