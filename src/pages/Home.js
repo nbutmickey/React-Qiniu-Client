@@ -101,7 +101,7 @@ class Home extends Component {
   }
 
   componentDidMount () {
-    this.reload('2017/03/17/')
+    this.reload('')
   }
 
   // 渲染加载中页面
