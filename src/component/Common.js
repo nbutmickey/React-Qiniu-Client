@@ -20,7 +20,7 @@ export const HOST = 'host'
 export const TOKEN_HOST = 'token_host'
 export const QINIU_UPLOAD_HTTPS = 'https://up.qbox.me/'
 export const QINIU_UPLOAD_HTTP = 'http://upload.qiniu.com/'
-export const DEFAULT_TOKEN_HOST = 'http://host.kutear.com:8080/'
+export const DEFAULT_TOKEN_HOST = 'http://qiniu.kutear.com/'
 export const COOKIE_AGE = 100
 // 获取列表
 const QINIUHOST = 'http://rsf.qbox.me'
