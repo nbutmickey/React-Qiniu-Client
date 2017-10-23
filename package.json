@@ -2,7 +2,7 @@
   "name": "qiniu-client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://kutear.github.io/react-qiniu-client",
+  "homepage": "http://kutear.github.io/React-Qiniu-Client",
   "devDependencies": {
     "gh-pages": "^0.12.0",
     "react-scripts": "0.9.0"
